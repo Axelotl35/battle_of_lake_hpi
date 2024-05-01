@@ -46,6 +46,8 @@ io.on("connection", (socket) => {
     socket.on('player_move', (update) => {
         players[socket.id].x += update[0];
         players[socket.id].y += update[1];
+        players[socket.id].x = Math.min(500,Math.max(0, players[socket.id].x));
+        players[socket.id].y = Math.min(500,Math.max(0, players[socket.id].y));
         update_players();
     });
     update_players();

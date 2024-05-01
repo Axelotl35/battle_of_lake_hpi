@@ -3,21 +3,23 @@ const c = document.getElementById("gameCanvas");
 const ctx = c.getContext("2d");
 
 let platypus = document.createElement("img");
-platypus.onload=function(){
+let map = document.createElement("img");
+platypus.src="assets/platypus.png";
+map.src = "assets/map.png";
+map.onload=function(){
     draw_enemies([]);
 }
-platypus.src="assets/platypus.png";
 
-kd.RIGHT.down(function(){
+kd.D.down(function(){
     socket.emit("player_move", [1,0])
 });
-kd.LEFT.down(function(){
+kd.A.down(function(){
     socket.emit("player_move", [-1,0])
 });
-kd.UP.down(function(){
+kd.W.down(function(){
     socket.emit("player_move", [0,-1])
 });
-kd.DOWN.down(function(){
+kd.S.down(function(){
     socket.emit("player_move", [0,1])
 });
 
@@ -27,6 +29,13 @@ kd.run(function () {
 function draw_self(){
     draw_player(250,250);
 }
+
+function draw_background(x,y){
+    ctx.save();
+    ctx.drawImage(map, -x, -y)
+    ctx.restore();
+}
+
 function draw_player(x,y){
     ctx.save();
     ctx.translate(x,y);
@@ -35,8 +44,9 @@ function draw_player(x,y){
     ctx.restore();
 }
 function draw(enemies, pos){
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, 500, 500);
+    //ctx.fillStyle = "black";
+    //ctx.fillRect(0, 0, 500, 500);
+    draw_background(pos[0],pos[1]);
     for(let enemy of enemies){
         draw_player(enemy[0],enemy[1]);
     }
@@ -48,7 +58,6 @@ function draw(enemies, pos){
 
 socket.on("update_players", (players, newpos)=>{
     draw(players, newpos);
-    //console.log(players)
 });
 //draw_enemies([]);
 //socket.emit("player_move", [Math.random()*500, Math.random()*500]);
